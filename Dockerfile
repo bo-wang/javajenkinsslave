@@ -34,6 +34,15 @@ RUN wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VER
     && cd / \
     && rm -rf Python-${PYTHON_VERSION}
 
+RUN apt-get update
+RUN apt-get install -y python3-pil
+
+# Install pip
+RUN apt-get update
+RUN apt-get install -y python3-pip python3-lxml
+RUN pip3 install -U pytest boto3 six
+
+
 #========================================
 # Install Loadimpact K6
 #========================================
