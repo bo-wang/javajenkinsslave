@@ -14,17 +14,17 @@ RUN apt-get update -qqy \
   && rm -rf /var/lib/apt/lists/*
 
 #========================================
-# Install Python 3.6.5
+# Install Python 3.7.3
 #========================================
 USER root
-ENV PYTHON_VERSION="3.6.5"
+ENV PYTHON_VERSION="3.7.3"
 
 #Install core packages
 RUN apt-get update
 RUN apt-get install -y build-essential checkinstall software-properties-common llvm cmake wget git nano nasm yasm zip unzip pkg-config \
     libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev mysql-client default-libmysqlclient-dev
 
-# Install Python 3.6.5
+# Install Python 3.7.3
 RUN wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz \
     && tar xvf Python-${PYTHON_VERSION}.tar.xz \
     && rm Python-${PYTHON_VERSION}.tar.xz \
@@ -40,7 +40,7 @@ RUN apt-get install -y python3-pil
 # Install pip
 RUN apt-get update
 RUN apt-get install -y python3-pip python3-lxml
-RUN pip3 install -U pytest boto3 six
+RUN pip3 install -U pytest boto3 six nose
 
 #==========
 # Maven
