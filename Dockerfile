@@ -40,7 +40,7 @@ RUN apt-get install -y python3-pil
 # Install pip
 RUN apt-get update
 RUN apt-get install -y python3-pip python3-lxml
-RUN pip3 install -U pytest boto3 six nose
+RUN pip3 install -U pytest boto3 six nose nose-allure-plugin
 
 #==========
 # Maven
