@@ -31,7 +31,7 @@ RUN  wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VE
     && cd Python-${PYTHON_VERSION} \
     && ./configure --enable-optimizations \
     && make altinstall \
-    && rm -rf Python-${PYTHON_VERSION}
+    && rm -rf Python-${PYTHON_VERSION} \
     && cd
 
 RUN apt-get update
