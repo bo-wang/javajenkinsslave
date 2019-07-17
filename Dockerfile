@@ -42,67 +42,6 @@ RUN apt-get update
 RUN apt-get install -y python3-pip python3-lxml
 RUN pip3 install -U pytest boto3 six nose nose-allure-plugin
 
-#==========
-# Maven
-#==========
-ENV MAVEN_VERSION 3.3.9
-
-RUN curl -fsSL http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
-  && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
-  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
-
-ENV MAVEN_HOME /usr/share/maven
-
-#========================================
-# Install Loadimpact K6
-#========================================
-#USER root
-#RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 379CE192D401AB61
-#RUN echo "deb https://dl.bintray.com/loadimpact/deb stable main" | sudo tee -a /etc/apt/sources.list
-#RUN apt-get update
-#RUN apt-get install k6
-
-#==========
-# Gradle
-#==========
-CMD ["gradle"]
-
-ENV GRADLE_HOME /opt/gradle
-ENV GRADLE_VERSION 4.6
-
-ARG GRADLE_DOWNLOAD_SHA256=98bd5fd2b30e070517e03c51cbb32beee3e2ee1a84003a5a5d748996d4b1b915
-RUN set -o errexit -o nounset \
-	&& echo "Downloading Gradle" \
-	&& wget --no-verbose --output-document=gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
-	\
-	&& echo "Checking download hash" \
-	&& echo "${GRADLE_DOWNLOAD_SHA256} *gradle.zip" | sha256sum --check - \
-	\
-	&& echo "Installing Gradle" \
-	&& unzip gradle.zip \
-	&& rm gradle.zip \
-	&& mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
-	&& ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle \
-	\
-	&& echo "Adding gradle user and group" \
-	&& groupadd --system --gid 1000 gradle \
-	&& useradd --system --gid gradle --uid 1000 --shell /bin/bash --create-home gradle \
-	&& mkdir /home/gradle/.gradle \
-	&& chown --recursive gradle:gradle /home/gradle \
-	\
-	&& echo "Symlinking root Gradle cache to gradle Gradle cache" \
-	&& ln -s /home/gradle/.gradle /root/.gradle
-
-# Create Gradle volume
-#USER gradle
-VOLUME "/home/gradle/.gradle"
-WORKDIR /home/gradle
-
-RUN set -o errexit -o nounset \
-	&& echo "Testing Gradle installation" \
-	&& gradle --version
-
-
 #========================================
 # OCTO
 #========================================
@@ -131,7 +70,7 @@ ENV PROGET_PASSWORD=$PROGET_PASSWORD
 COPY NuGet.Config /
 
 #========================================
-# Add normal user with passwordless sudo 
+# Add normal user with passwordless sudo
 #========================================
 USER root
 RUN useradd jenkins --shell /bin/bash --create-home \
